@@ -1,0 +1,15 @@
+选择从光标到行尾的内容:   Shift+End
+
+选择从光标到行首的内容： Shift+Home
+
+
+删除光标右侧的所有内容(当前行):   Ctrl+Delete
+删除整行：shift +delete
+
+同时选中所有匹配编辑(与当前行或选定内容匹配):   Ctrl+Shift+L
+
+Ctrl+Shift+K	删除行
+
+按住alt，鼠标点击哪里就是在哪里增加一个光标
+
+按住shift和左右键，是一个个选择
