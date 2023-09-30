@@ -1,0 +1,8 @@
+- git add 文件名 ：提交到暂存区
+- git commit - m "信息"  ：提交到版本库，并添加信息，如果不写，会自动跳到自带的编辑器，让你写信息的
+- git log ：查看当前指针（当前）以及之前的提交的版本记录，看不到当前之后的提交记录
+- git reflog ：查看所有的操作，包括每次的add 和commit以及其他修改
+- git reset hard HEAD^   :工作区返回到上一个版本   
+  - 或者是先用refllog查看想要到的版本的前面七个数字子母组成的标识符 ，然后 git reset hard xxxxxx  回到想回到的版本
+- git reset soft HEAD :回退到本版本的缓存区， 可以写重新提交的注释，也可以改了该版本的内容再重新提交
+- git commit --amend ：会进入编辑器重写最近一次提交信息
