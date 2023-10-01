@@ -20,7 +20,7 @@
 
 - git branch -D 名字  :删除分支
 
-- git push origin --delete branch_name：删除远程分支
+- git push origin --delete 分支名：删除远程分支
 
   ​
 
@@ -49,10 +49,12 @@
 
   分支的push跟pull在默认的情况下，是会找远程的同名分支对应的
 
-  - git branch -vv：查看当前分支和远程分支的关联，就是当前的分支的push和pull是跟远程的谁挂钩
+- git config --global push.default current：设置默认推送或者拉取都是远程的同名分支，直接git push就可
+
+  - git branch -vv：查看当前分支和远程分支的关联，就是当前的分支的push和pull是跟远程的谁挂钩  
 
 
-- git branch --set-upstream-to=origin/dev dev：设置远程的dev和本地的dev挂钩
+- git branch --set-upstream-to=origin/dev dev：设置远程的dev和本地的dev挂钩  这跟第一个指令是冲突的
 
   ----
 
