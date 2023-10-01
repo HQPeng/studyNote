@@ -54,4 +54,13 @@
 
 - git branch --set-upstream-to=origin/dev dev：设置远程的dev和本地的dev挂钩
 
+  ----
+
+  配置ssh
+
+  1. 本地生成一个ssh秘钥：    ssh-keygen -t rsa -C '邮箱'    一直enter就行
+  2. 在github中点击添加秘钥 ：主页的setting中
+  3. 如果仓库之前已经用了http了，用指令git remote set-url origin git@github.com:username/repo.git    username是GitHub的账户名，repo是你想整的仓库名
+  4. ssh -T git@github.com ：测试ssh链接
+
   ​
