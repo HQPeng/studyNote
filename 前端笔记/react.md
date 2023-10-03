@@ -64,9 +64,9 @@ react的基本步骤，就是先定义一个渲染器，也就是在哪个地方
 
 
 
-#### 3.1.3、组件间传值（类组件）
+#### 3.1.3、组件间传值（props）
 
-- 首先这是父传子，在父组件的return里面肯定要写子组件的标签的，写的时候同是给这个子组件的标签里添加自定义的属性和值，这些所有的属性和值就是组成子组件在定义的时候，那个函数里的参数props，然后子组件就可以拿到整个数据对象了，
+- 首先这是**父传子**，在父组件的return里面肯定要写子组件的标签的，写的时候同是给这个子组件的标签里添加自定义的属性和值，这些所有的属性和值就是组成子组件在定义的时候，那个函数里的参数props，然后子组件就可以拿到整个数据对象了，
 
   ~~~jsx
   父组件里return时候，在里面写子组件，并传数据
@@ -97,7 +97,10 @@ react的基本步骤，就是先定义一个渲染器，也就是在哪个地方
   export default Child
   ~~~
 
-#### 3.1.4组件传值参数props
+- 上面这是利用props传递固定的单纯数据，那么如果在这个子组件的标签上面写的自定义属性值是我父组件里的方法，一样的，这个方法也会被传给子组件，那么这时候如果我在这个方法里写return，而且return的数据是我父组件本身的数据，那么这个子组件到时候就可以通过本身this.porps.方法名，就可以拿到我的父数据了
+- 同样的，如果我的父组件给这个方法写的时候，我在函数里写了this.setState（）方法，并且还设置了参数，到时候这个参数由子组件用this.props。方法名（实参）调佣时候传递实参，那也就是实现了 父组件获取到了子组件的数据，并且还渲染到了父组件本身的state里面了
+
+#### 3.1.4、组件传值参数props
 
 1. **props.children**
 
@@ -142,7 +145,79 @@ react的基本步骤，就是先定义一个渲染器，也就是在哪个地方
      }
      ~~~
 
+#### 3.1.5、组件间传值（ref）
 
+- 父传子：这个需要理解一个概念，就是ref ：这个是在一个组件的constructor用react.createRef()  可以定义一个ref对象，这个时候，只要在这个组件里的的任何其他标签（比如说子组件）上面定义一个属性ref 值就是这个创建出来的ref对象，那么就可以在组件里面拿到被定义标签（组件）的对象 
+
+- 就可以理解成过程是，首先父里面有子，父通过子的函数传给子组件，子再通过拿到的数据渲染自己的本身，然后再在父里面出现
+
+  ~~~jsx
+  class Test extends component{
+      constructor(props){
+          super(props)
+          this.aaa=react.createRef()  //创建一个ref对象
+      }
+      state={
+          mes:333
+      }
+      render(
+      	<div> <Child ref=this.aaa></Child> </div>//把定义的ref对象赋值给子组件
+      )
+      function1(){
+          console.log(this.aaa.current)   //这里拿到的就是Child这个组件的对象，因此可以拿到它里面的state数据
+      }
+  	function2(){
+          this.aaa.current.bbb(this.state.mes)//这里，因为是可以拿到子组件的对象，所以当然也可以调用它里面的定义好的方法bbb  并且把自己的数据this.state.mes当做实参传过去，这就是实现了父传子
+      }
+  }
+  
+    //这是子组件里面的,只要写好事件就行
+  class Child extends component{
+      
+      bbb(value){
+          console.log(value)    .//这里就可以拿到父组件传来的this.state.mes 了，
+      }
+  }
+  
+  ~~~
+
+
+#### 3.1.6、组件传值（context）
+
+- 这个传值过程，就是先用react里面的插件createdContext方法创建一个全局的context对象，然后这个对象里面提供了两个属性，一个名字是provider，一个是consumer 这两个属性用的时候当做两个组件用。
+
+  ~~~jsx
+  //这是一个单独的文件，比如就是写在src/context/index.js，这样以后就可以复用
+  	import {createContext} from 'react'  //引入
+  	export default createContext()  //这个是一个方法，导出时候直接带（）表示导入时候就运行
+  ~~~
+
+- 然后哪个组件里需要提供数据，就再哪个组件里面把provider引用进来，然后用在组件的render里面，这个<porvider></provider>标签对下面的标签，都可以用数据了，至于哪些数据可用，由provider标签上面的value决定
+
+- 接收数据的组件，只要定义一个固定名字的静态属性，值就是引入进来的context就可以用
+
+  ~~~jsx
+        //提供数据的组件
+  import context from ../././   //这就是导入上面的写好的全局context
+  var { provider }=context   //结构赋值的写法，定义这个context对象里面的provider成员，这名字一定
+  class Test extends react.component{
+      state={mes:111}
+      render(<div>
+                 <provider value={this.state.mes}>  //value定义哪些数据可用被访问
+                     <Child1></Child1>         //被provider包的组件，才可以访问数据
+                     <Child2></Child2>
+                 </provider>
+             </div>)
+  }
+  
+        //接收数据的组件
+  import context from '../../'  //更上面一样，先引入这个全局的context
+  class Child extends react.Component{
+      static contextType=context  //这里这个静态属性名字，是定死的
+  }
+  ~~~
+
+- 
 
 
 
@@ -385,7 +460,7 @@ export default App;
   ~~~
 
 
-### 3.4、生命周期
+### 3.4、生命周期函数
 
 1. **constructor（props）{super（props）}**：组件的构造函数，挂载之前被调用
 
@@ -442,6 +517,180 @@ export default App;
    - 类似于vue的beforeDestory
 
    - 在组件被卸载并销毁之前立即被调用。在此方法中执行任何必要的清理，例如使定时器无效，取消网络请求或清理在`componentDidMount`中创建的任何监听。
+
+   
+
+### 3.5受控组件/非受控组件
+
+> 这两个一般形容的都是input框类型的，受控组件是指imput的值是收react的state管理的，可以用onChange事件来做到双向数据绑定
+>
+> 非受控组件就是input的值不收react的state管理的，由DOM本身管理
+
+#### 3.5.1、受控组件
+
+- 也就是把state中的值跟input的value值绑定在一起，这个实现方式就是很简单，给value绑定state的值，然后通过input的onChange事件里，通过事件对象`e.targe.value`获取到这个input的最新输入的值，在把这个值通过setState方法赋值给state，就是实现了双向数据绑定
+
+#### 3.5.2非受控组件
+
+- 就是说这个input框的值不跟state绑定。先利用react的内置方法createRef（）方法 在对象的constructor里面创建一个ref对象。然后再input框里面定义一个属性，名字是ref  值就是这个定义好的ref对象。然后input里面不能再写value了，如果写了，就成了受控组件了，这时候这里写defaultValue属性了（如果这个值写了就是个默认值，非受控组件不会实现双向数据绑定），然后再处理函数里面，直接获取一开始创建好的那个ref对象，在里面有个current.value就是当前最新的输入的值了
+
+  ~~~jsx
+  class Test extends {
+      constructor(props){
+          super(props)
+          this.aaa=react.createRef()   //创建一个ref对象
+      }
+      state={ mes : 'ttt' }            
+      render( <div defaultValut={this.state.mes} ref={this.aaa}></div> 
+            <button onClick={this.handler.bind(this)}></button>)
+  	handler(){
+          console.log(this.aaa.current.value)  //这里可以通过前面定义的ref对象拿到这个对象放在·												哪个的input框里的最新数据
+         	this.setState(state=>{
+              return{
+                  mes:this.aaa.current.value
+              }
+          })
+      }
+  }
+  ~~~
+
+
+
+### 3.6、高阶函数HOC
+
+- 高阶函数就是定义一个可复用的函数，函数有个参数，参数是另一个组件，高阶函数必须返回一个类组件，这个类组件里的render要渲染参数组件
+
+- 高阶函数的意义就是对参数组件做处理，哪个参数组件需要它处理，最后再这个组件的export时候，调用一下这高阶函数就行，有点像复用组件的感觉
+
+  ~~~jsx
+  //定义一个高阶函数，在src里面创建一个文件夹HOC，比如在里面定义个在组件末尾加一段文字的功能js文件
+  
+  import {Fragment} from 'react'  //这个Fargment就是为了符合render里面需要有且一个                               根元素搞得，这是react提供的一个伪标签，也可以简写成 < ></ >  空标签
+  
+  const endAdd=function(Hoc){         //这是个参数，写啥无所谓，但是首字母要大写
+      return class Test extends react.component{
+          render(
+          return	<Fragment>
+                      <Hoc></Hoc>  
+                      <div>这里是添加的内容</div>  //这里就是处理传过来的组件
+                 </Fragment>
+          )
+      }
+  }
+  export default endAdd
+      
+  //然后比如这时候有个组件需要在组件内加点内容，就可以用高阶组件了，具体用法就是最后在组件导出时候，调用一下这个高阶组件方法
+   import addText from '../../xx.js' //把高阶组件引入进来
+   class Test extends react.component{
+       renter(
+       	return <div>这是组件本身内容</div>
+       )
+   }
+   export default addText(Text)  //把本组件传入HOC，它处理后返回一个处理好的类组件
+  ~~~
+
+  
+
+### 3.7、redux
+
+-  这个的作用就是跟vue的store的作用一样，也是弄一个全局的仓库，然后谁用谁调取
+
+  1、先在store文件夹里面定义一个store仓库（jsx的格式）
+
+  - 导入redux里的createStore方法，用来最后创建这个仓库
+
+  - 先在外面是定义好默认数据 const defaultDate={mes:1}
+
+  - 再写纯函数 reducer（state=defaultDate ， actions）{return}  ：这两个参数固定的，**必须有return，return 的东西就是会完全覆盖掉上面定义好的默认数据数据 **这个函数的作用就是，根据第二个参数action的规则，返回仓库的新数据
+
+  - 产生仓库store： const store=createStore（reduce）：这是参数是上面的函数，仓库得要有数据吧，这个reduce就是返回仓库数据用的
+
+  - 导出store ：export default Store
+
+    ~~~jsx
+    import {createStore} from 'redux'
+    const defaultdata={mes1:11 ， mes2:22}  //定义好数据源
+    
+    function reducer(state=defaultdata , actions){  //定义好reducer函数，参数名字是固定的
+        return state  //这里返回的是什么，就是完全代替了数据源 defaultdate
+    }
+    
+    const store =createStore(reducer)  //产生仓库  
+    export default store  //导出仓库
+    ~~~
+
+    
+
+  2、然后是视图组件，也就是哪个组件要用这个store里面的数据
+
+  - 先引入store仓库  
+
+  - 再用这个仓库自带的方法store.getState()才可以拿到整个仓库里数据 
+
+  - 这时候，这个组件如果要修改store里面的数据，需要写好action任务规则，然后再通过store的自带方法store.dispach(action)  进行派发定义好的任务
+
+    - 这个action规则书写是一个对象形式，这对象里面一定要有个成员叫type，值是啥无所谓，后面的reducer函数就是根据这个type来做不同处理的（因为可能有好多个组件要用这个store，所以到时候会有好多个action）
+
+    ~~~jsx
+    //这是需要用数据的组件
+    import store from '.../xx.js'  //引入store仓库
+    
+    class Test extends component{
+        state={mes:store.get().mes1} //这里就是把store里面的数据mes1复制给了本身组件的mes
+        
+        render(
+        	return<div>
+             	<button onClick={this.hanler.bind(this)}></button>  //通过点击，把store里												面数据加1赋值给本身组件mes
+             </div>
+        )
+        
+        handler(){
+            const action={        //定义action，这个名字其实取什么无所谓
+                type='add'，      // action规则里面一定要有的type，后面reducer就是根据这个									type来判断处理
+                val:1	 	//这里定义其他的东西，都可以，看自己，因为这整个action到时                                候都会被带到reducer的，因为我这里是需要给数据加1，就定义了 个要加的数
+            }
+            store.dispatch(action)  //通过这个方法，把定义的action发送给reducer方法
+        }
+    }
+    ~~~
+
+    
+
+  - 这时候在store文件里的 reducer函数里，就要写第二个参数的actions的判断，写的判断依据就是actions.style 再去分别处理 ，到这里的处理，最后记得return返回数据
+
+    ~~~jsx
+    //这里是reducer方法里，要根据收到的所有acitions来判断处理了
+    fucntion reducer(state=default , actions){
+        if(actions.type==='add'){
+            return{ ...state , mes1:state.mes1 + 1}//因为这里的return的东西是全覆盖的，所有先解构赋值，把原来的数据相当于复制一份出来，然后再再后面写要处理的，所有前面解构处理的同属性名的就会被后面的处理的代替
+         if(actions.type==='xxx')  ///这里再处理其他的情况
+        }
+    }
+    注意，到这里，知识修改了store里面的值，但是如果哪个组件的数据用了这store的数据，现在改的数据不会自动同步过去的，还是原来的值
+    ~~~
+
+    
+
+  - 到这里，知识修改了store里面的值，如果说在第二步的第二点里面，用了store的数据，而且还把store的数据给到了自己组件的state里面，那么这里还要通过store方法  store.subscribe( function(){} ) 在这个函数里的参数函数里，，再把数据通过本身的this.state()方法设置一下。也就相当于，这个方法是store里面的数据更新时候，这个函数就会触发
+
+    ~~~jsx
+    //这里回到组件里，设置同步数据
+    import store from 'xxx'  //引入store
+    class Test extends component{
+        state={mes:store.getState().mes1}   //设置市store里额数据给自己组件
+        
+         //使用store.setState方法，这个方法是store里数据只要变化，就会执行
+         store.setState(function(){ 
+            this.setState(()=>{  
+                return{
+                    mes:store.getState().mes1
+                }
+            })
+        })
+    }
+    ~~~
+
+    
 
 ​	   
 
