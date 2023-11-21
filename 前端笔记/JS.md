@@ -175,7 +175,9 @@
   - 克隆节点：节点.cloneNode()  里面写TRUE就是表示也克隆他的所有子节点
 
 - 元素节点的偏移量：元素.offsetLeft 、 元素.offsetTop 他的偏移参考对象是，假如这个元素有绝对定位，绝对定位的参考是什么，偏移量就也是按照这个参考来
+
 - 元素的尺寸：元素.offsetwidth  元素.offsetHeight 这是包括边框的   元素.clientWidth  元素.clientHeight  不包括边框的
+
 - 获取浏览器窗口尺寸：innerWidth innerHeight ：包括滚动条的尺寸    document.documentElement.clientWidth  不包含滚动条的
 
 - 事件类型：
@@ -240,8 +242,23 @@
 - 解构赋值：就是快速获取对象或者数组里的内容方式   
 
   - 对象：var {name}=obj  就是等价于 var name =obj.name    多个的话就是  var {name ，age} 等价于  var name =obj.name  var age=obj.age。如果不想用跟对象一样的名字，那就是  var{name1：name}=obj  等价于  var name1=obj.name1
-  -  数组：跟对象差不多，但是拿的数据就是只能从数组里按顺序一个个拿了  var【a】=arr  就是等价于 var a=arr【0】   如果是多个数据，就是一次从数组里拿
+  -  数组：跟对象差不多，但是拿的数据就是只能从数组里按顺序一个个拿了  var【a】=arr  就是等价于 var a=arr【0】   如果是多个数据，就是一次从数组里拿，比如 let [a , b ]=arr 等价于 let a=arr[0] ，b=arr[1]   
+    
+      如果想要获取数组中某个固定位的数据，就是不需要的就直接置空就行  let [ , , , a]=arr  等价于 let a = arr[3] 
       技巧，，两个变量交换   var a=1，b=2     交换： var【b , a】=[a ,b]
+
+  - 解构赋值给函数参数添加默认值：
+
+    ~~~js
+    let obj={a:3 , b:4}
+    function test ({a=1 , b=2}={}){}  //这里的函数参数是一个对象,如果实参是一个有这些属性的对象，那就正常用实参的，
+    																	//如果传递的实参没有这些属性，函数里用这些属性的时候就是使用默认值
+    																//之所以要写从空对象结构，是因为，如果实参啥也没写，就从默认的空对象里结构这些属性，
+    																//不写从空对象里结构会报错，因为它就没有结构的来源了，
+    test(obj) //
+    ~~~
+
+    
 
 - 在对象内写函数时候，可以不写function和冒号   比如  var object={a（）{}}  等价于{a：function（）{}}
 
@@ -351,8 +368,9 @@
   ~~~
 
 - **原型：Protype  ：只有函数有**
+  
   - 所有的函数（eg：Array）都有一个属性叫Protype，它是个对象（Array.protype={}），这个对象里有个属性constructor，它也
-
+  
 - **隐式原型：-proto-  :只有对象有**
 
   - **所有的对象(test={})，都有一个属性-proto-（test.-proto-） 它指向的是这个对象构造函数的Protype，也就是**
@@ -386,7 +404,8 @@
     tem.fun()   //9
     ~~~
 
-  
+  - 在js的类中，没有public（公共） 、provate（仅本类）、protected（本类和子类）这些修饰符的，但是在TS中，是有的
+  - 类的特性：单根性：一个类只能有一个**父类**.
 
 - **继承**
 

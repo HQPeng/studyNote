@@ -1,40 +1,57 @@
 # 基础
 
 - 属性值可以带双引号，也可以不带（包括单标签）
+
 - &copy；版权 、  &reg：商标 、  &nbsp：空格 、 &lt ：大于 、& gt：小于号 
+
 - href：
   - 外部样式导入时候
   - 锚点时候 href='#'
+  
 - url:
   - import引入样式时候
   - background-image
+  
 - src：
 
   - <imgage> , <video>
+  
 - 在使用img标签的时候，图片跟html文件必须在一个盘符里 
+
 -  </table>
   - table标签中的aline=center是让整个表格居中
   - valign是控制行里面内容位置
   - align是控制列的位置
   - 合并行colspan    合并列rowspan
 
-- 类型选择器的权重是0001 class是0010 ID是0100 通配符是0000 相同的选择器权重一样，就近原则
-- 浮动
+- 类型浮动
+
+  - **在非浮动元素眼里，浮动元素会被完全无视，也就是说，到时候的非浮动元素的margin值根本不会以是以浮动元素为基准的**
+
   - 一个元素浮动后，后面的盒子如果没有浮动，就会盖住这个浮动的盒子，但是不会盖住浮动里面的文字，文字是会环绕这个浮动盒子显示
   - 清楚浮动：clean：left  意思是如果这个盒子的左边有浮动元素，那么这个盒子本身会下降一个，不会动浮动元素盒子一点
+
 - 元素只会默认继承父元素的宽度
+
 - padding
   - padding会撑大盒子，可以用box-sizing：boderbox设置，让它不会撑大，这就是固定死了盒子的大小
+  
 - margin
   - margin：0 auto：只有在设置了本身数值后才会有效果
 
 - text-align：justify ：文件两端对齐，只有在多行时候才有效
+
 - **font是 style、weight 、font-size /line-height 、famliy的缩写，顺序不能变，最后两个必须写才能生效**
+
 - background-attachment：固定背景图，但是显示还是显示在元素内
+
 - background-position（left  top）定位在左上，可以写像素，也可以写百分比
-- background-size：cover：表示一张图一直等比例放大，知道把整个容易盛满，这基本上都会造成图片放大的 
+
+  - background-size：cover：表示一张图一直等比例放大，知道把整个容易盛满，这基本上都会造成图片放大的 
   - content也是等比例放大，但是它是只有长宽有一个碰到了容器边了，就不会继续放大了
+
 - overflow：auto：内容超出就显示滚动条，没超就不显示
+
 - 隐藏的方式
   - display：none：啥都没有，不会渲染的
   - opacity：透明度
@@ -43,7 +60,9 @@
 - 动态伪类
   - a标签的四种状态：link ， hover ， active ， visited  一般设置顺序是：link ，visited ，hover ，active
   - input：focus：聚焦状态
+  
 - vertical-align：这是行内块元素的专属，它的四个值 middle、top、bottom、baseline都是相对于行高来的
+
 - 固定定位：fixed ，
 
 - 粘性定位 sticky : **显示还是一直在父元素里面，但是位置它是跟着父元素中，最近的一个具有滚动条的父元素来的，如果没有，那就是默认浏览器的。**
@@ -101,9 +120,11 @@
 
 
 
-- BFC 触发条件：  在垂直方向上同属于一个BFC的两个相邻box会发生重叠  、 BFC跟浮动盒子不会和浮动盒子发生重贴（自适应两栏、三栏）  、计算BFC高度时候，浮动元素也参与计算
-  - 根元素 、 浮动元素 、overflow不为visibility、 position为absolute或fixed等等  
-
+- **BFC**
+  
+  -  触发条件： 根元素 、 浮动元素 、overflow不为visibility、 position为absolute或fixed等等 
+  - 特性： 在垂直方向上同属于一个BFC的两个相邻box会发生重叠  、 BFC跟浮动盒子不会和浮动盒子发生重贴（自适应两栏、三栏）  、计算BFC高度时候，浮动元素也参与计算 
+  
 - 字体的引入：@font-face{
       font-family：   
       src：url（）
@@ -205,9 +226,10 @@
     }
     ~~~
 
-    
 
-    
+- 文字，不管有没有设置点击事件，在点击文字后，会有光标，想要去除的话，通过css样式 user-select：none
+
+
 
 
 ​        

@@ -509,10 +509,20 @@ export default App;
 
 ####  3.3.2state的修改方法 setstate
 
-- 它本身就是类里面的一个**方法**，语法： this.setState( 要处理的数据过程 ， [ 回调函数 ] )  这个方法是异步的，但是它的回调函数一般不用
+- 它本身就是类里面的一个**方法**，语法： this.setState( 要处理的数据过程 ， [ 回调函数 ] )  这个方法可能是异步的
+
+- 如果setState方法是在html元素中的事件处理函数里，那么就是异步的，也就是说如果这时候写完setState方法后，后面的同步代码是会执行完后再进行render函数的
+
+- 如果setState方法不是写在元素的事件处理函数中，那么就是同步的，也就是说这时候setState方法设置了新值后，后面紧接着的代码是获取新值，是可以获取到的，获取到后再进行render函数
 
   ~~~jsx
-  方法一：用对象的形式写 对象名就是直接写state里面的数据属性名，值就是处理的过程
+  方法一：用对象的形式写 对象名就是直接写state里面的数据属性名，值就是处理的过程，
+  这个方法有一个问题，就是如果在异步情况下面再写一个同步代码this.setState那么，这次的值还是最开始的值，不会是上一次修改过得值
+  ！！！因为react在setState处于异步情况下，它会把所有的setState方法统计后，再把真正的state的值做更新，因为state值变了，就会立马更新
+  render函数，然后再执行setState里的回调函数。
+  即在: state:{mes:1} 
+    setState{mes：this.state.mes++}
+  	setState{mes：this.state.mes++}//执行后，state的值是1，不会是2的
   class Test extends react.component{
       state={
           mes:1
@@ -524,7 +534,8 @@ export default App;
           })
   	}
   }
-  方法二：用函数的方式，一定要有返回值，返回值一定要是个对象，跟vue一样
+  方法二：用函数的方式，一定要有返回值，返回值一定要是个对象，跟vue一样。如果用函数的方式写，那么再写同步的this.setState那么这次
+  的方法里的值，是上一个this.setState后的值
       this.setState( function(value){  //这里可用用箭头函数，这里的这个参数就是数据state这个对象
              return {
                 mes:value.mes + 1     //一样的，这里直接写数据的属性名就行，不用this的
